@@ -1,0 +1,25 @@
+version: '3'
+services:
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: .
+    volumes:
+      - .:/home/todo
+    environment:
+      - RUNTIME=development
+      - PORT=5000
+      - MONGO_APP_NAME=api
+      - MONGO_DB=todo
+      - MONGO_URI=mongodb://api:password@192.168.100.39:27017/todo
+      - PRIV_KEY=/home/todo/keys/key.key
+      - PUB_KEY=/home/todo/keys/key.pub
+      - ENABLE_USERS_ROUTES=TRUE
+
+  nginx:
+    restart: always
+    image: ermiry/todo-express-api-nginx:development
+    ports:
+      - '80:80'
+    depends_on:
+      - api
