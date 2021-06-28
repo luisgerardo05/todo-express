@@ -32,4 +32,4 @@ jobs:
           URL: "http://localhost.com"
           USERS: "5"
           RATE: "5"
-          RUNTIME: "20s"
+          RUNTIME: "1m"
