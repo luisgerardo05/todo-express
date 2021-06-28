@@ -29,7 +29,7 @@ jobs:
         uses: luisgerardo05/todo-express@main
         with:
           LOCUSTFILE: "./test/locustfile.py"
-          URL:  "http://localhost.com:80"
+          URL: "http://localhost.com"
           USERS: "1"
           RATE: "1"
           RUNTIME: "1m"
