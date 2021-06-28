@@ -1,0 +1,1 @@
+locust -f locustfile.py --host http://localhost.com:80 -u 1 -r 1
