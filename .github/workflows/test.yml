@@ -12,7 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
       - name: Run Load Test
         uses: luisgerardo05/todo-express@main
         with:
