@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:stretch-slim
 
 WORKDIR "/home/todo"
 
