@@ -1,1 +1,1 @@
-locust -f locustfile.py --host http://localhost.com:80 -u 1 -r 1
+locust -f locustfile.py --host http://localhost.com:80 --headless -u 1 -r 1 --run-time 1m --stop-timeout 30
