@@ -6,12 +6,13 @@ sudo docker run \
   -it \
   --name todo --rm \
   -p 5000:5000 \
-  -v /home/ermiry/Documents/ermiry/Projects/todo-express:/home/todo \
+  -v /home/luisgerhs/Documents/Percepthor/gepp/test-locust/folder/todo-express:/home/todo \
+  -v /home/luisgerhs/Documents/Percepthor/gepp/test-locust/todo-express/keys:/home/keys \
   -e RUNTIME=development \
   -e PORT=5000 \
   -e MONGO_APP_NAME=api -e MONGO_DB=todo \
-  -e MONGO_URI=mongodb://api:password@192.168.100.39:27017/todo \
-  -e PRIV_KEY=/home/todo/keys/key.key -e PUB_KEY=/home/todo/keys/key.pub \
+  -e MONGO_URI=mongodb://api:password@192.168.1.71:27017/todo \
+  -e PRIV_KEY=/home/keys/key.key -e PUB_KEY=/home/keys/key.pub \
   -e ENABLE_USERS_ROUTES=TRUE \
   ermiry/todo-express-api:development /bin/bash
 ```

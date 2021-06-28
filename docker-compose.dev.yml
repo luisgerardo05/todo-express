@@ -6,12 +6,13 @@ services:
       context: .
     volumes:
       - .:/home/todo
+      - /home/luisgerhs/Documents/Percepthor/gepp/test-locust/todo-express/keys:/home/todo/keys
     environment:
       - RUNTIME=development
       - PORT=5000
       - MONGO_APP_NAME=api
       - MONGO_DB=todo
-      - MONGO_URI=mongodb://api:password@192.168.100.39:27017/todo
+      - MONGO_URI=mongodb://api:password@192.168.1.71:27017/todo
       - PRIV_KEY=/home/todo/keys/key.key
       - PUB_KEY=/home/todo/keys/key.pub
       - ENABLE_USERS_ROUTES=TRUE
