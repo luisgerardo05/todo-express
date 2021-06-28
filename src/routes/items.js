@@ -20,7 +20,7 @@ const passport_authenticate_jwt = require ('../utils/passport_auth_jwt');
 // @access  Private
 router.get ('/', passport_authenticate_jwt ((req, res, next) => {
 
-	Item.find ({ "user": ObjectId (req.user.id) })
+	Item.find ()
 		.select ('_id title description date done completed')
 		.then (items => {
 			return res.status (200).json (items);
