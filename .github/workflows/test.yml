@@ -1,0 +1,23 @@
+name: Todo Locust Load Test
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    name: Todo production build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run Load Test
+        uses: luisgerardo05/todo-express@main
+        with:
+          LOCUSTFILE: "./test/locustfile.py"
+          URL:  "http://localhost.com:5000"
+          USERS: "1"
+          RATE: "1"
+          RUNTIME: "1m"
