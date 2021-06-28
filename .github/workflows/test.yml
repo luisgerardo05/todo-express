@@ -25,11 +25,11 @@ jobs:
       - name: Install dependencies 
         run: npm ci
 
-      - name: Run Load Test
-        uses: luisgerardo05/todo-express@main
-        with:
-          LOCUSTFILE: "./test/locustfile.py"
-          URL: "http://localhost.com"
-          USERS: "1"
-          RATE: "1"
-          RUNTIME: "1m"
+      # - name: Run Load Test
+      #   uses: luisgerardo05/todo-express@main
+      #   with:
+      #     LOCUSTFILE: "./test/locustfile.py"
+      #     URL: "http://localhost.com"
+      #     USERS: "1"
+      #     RATE: "1"
+      #     RUNTIME: "1m"
