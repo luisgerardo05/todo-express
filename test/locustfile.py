@@ -23,6 +23,7 @@ class WebsiteUser(HttpUser):
 
 
     def on_start(self):
+        print('Hello there')
         with self.client.post(
             url = '/api/users/login',
             headers = {'Content-Type': 'application/json'},
