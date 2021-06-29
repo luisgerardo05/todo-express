@@ -26,4 +26,4 @@ jobs:
         run: npm ci
 
       - name: Locust Load Test
-        run: ./test/run.sh
+        run: sh ./test/run.sh
