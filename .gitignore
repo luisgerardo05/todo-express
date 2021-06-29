@@ -3,3 +3,7 @@
 node_modules
 
 keys
+
+__pycache__
+
+.env

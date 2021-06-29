@@ -1,0 +1,35 @@
+name: Todo Locust Load Test
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    name: Todo production build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install node dependencies 
+        run: npm ci
+
+      - name: Locust Load Test
+        uses: apardo04/locust-github-action@1.0.0
+        with:
+          LOCUSTFILE: "./test/locustfile.py"
+          URL: "http://localhost.com:80"
+          USERS: "5"
+          RATE: "5"
+          RUNTIME: "10s"
