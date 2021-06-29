@@ -12,7 +12,8 @@ function validate_item_input (data) {
     else if (!Validator.isLength (data.title, { max: 256 }))
         errors.title = 'Title must not exceed a length of 256.';
 
-	if (!Validator.isLength (data.description, { max: 1024 }))
+    if (Validator.isEmpty (data.description)) errors.description = 'Description field is required.';
+    else if (!Validator.isLength (data.description, { max: 1024 }))
 		errors.description = 'Description must not exceed a length of 1024.';
 
     return {
