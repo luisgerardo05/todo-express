@@ -23,7 +23,6 @@ class WebsiteUser(HttpUser):
 
 
     def on_start(self):
-        print('Hello there')
         with self.client.post(
             url = '/api/users/login',
             headers = {'Content-Type': 'application/json'},
@@ -38,43 +37,24 @@ class WebsiteUser(HttpUser):
     # Items
     @task
     def get_items_route(self):
-        res = self.client.get(
+        with self.client.get(
             url = '/api/todo/items',
             headers = {'Authorization': self.token},
-        )
-        for item in res.json():
-            self.ids.append(item['_id']) # to save _ids in express environment
-            # self.ids.append(item['_id']['$oid']) # to save _ids in pycerver environment
-
-    
-    @task
-    def create_items_route(self):
-        self.client.post(
-            url = '/api/todo/items',
-            headers = {
-                'Authorization': self.token,
-                'Content-Type': 'application/json'
-            },
-            data = json.dumps(self.items[random.randint(0,8)])
-        )
-    
-
-    @task
-    def get_item_info_route(self):
-        if len(self.ids) > 0:
-            _id = self.ids[-1]
-            self.client.get(
-                url = '/api/todo/items/' + _id + '/info',
-                headers = {'Authorization': self.token,},
-                name = '/api/todo/items/:id/info',
-            )
+            catch_response = True
+        ) as response:
+            if response.status_code != 200:
+                response.failure("Got status code " + str(response.status_code) + " instead of 200")
+            else:
+                for item in response.json():
+                    self.ids.append(item['_id']) # to save _ids in express environment
+                    # self.ids.append(item['_id']['$oid']) # to save _ids in pycerver environment
 
 
     @task
     def update_item_route(self):
         if len(self.ids) > 0:
             _id = self.ids[0]
-            self.client.put(
+            with self.client.put(
                 url = '/api/todo/items/' + _id + '/update',
                 headers = {
                     'Authorization': self.token,
@@ -82,136 +62,87 @@ class WebsiteUser(HttpUser):
                 },
                 data = json.dumps(self.items[random.randint(0,8)]),
                 name = '/api/todo/items/:id/update',
-            )
-
-
-    @task
-    def delete_item_route(self):
-        if len(self.ids) > 0:
-            _id = self.ids[0]
-            self.client.delete(
-                url = '/api/todo/items/' + _id + '/remove',
-                headers = {'Authorization': self.token,},
-                name = '/api/todo/items/:id/remove'
-            )
-            self.ids.remove(_id)
-
-    
-    @task
-    def create_items_route_bad_token(self):
-        self.client.post(
-            url = '/api/todo/items',
-            headers = {
-                'Authorization': 'self.token',
-                'Content-Type': 'application/json'
-            },
-            data = json.dumps(self.items[random.randint(0,8)])
-        )
+                catch_response = True
+            ) as response:
+                if response.status_code != 200:
+                    response.failure("Got status code " + str(response.status_code) + " instead of 200")
 
 
     @task
     def update_item_route_bad_token(self):
         if len(self.ids) > 0:
             _id = self.ids[0]
-            self.client.put(
+            with self.client.put(
                 url = '/api/todo/items/' + _id + '/update',
                 headers = {
                     'Authorization': 'self.token',
                     'Content-Type': 'application/json'
                 },
                 data = json.dumps(self.items[random.randint(0,8)]),
-                name = '/api/todo/items/:id/update',
-            )
+                name = '/api/todo/items/:id/update - bad token',
+                catch_response = True
+            ) as response:
+                if response.status_code == 401:
+                    response.success()
+                else:
+                    response.failure("Got status code " + str(response.status_code) + " instead of 401")
 
 
     @task
-    def delete_item_route_bad_token(self):
+    def update_item_route_no_description(self):
         if len(self.ids) > 0:
             _id = self.ids[0]
-            self.client.delete(
-                url = '/api/todo/items/' + _id + '/remove',
-                headers = {'Authorization': 'self.token',},
-                name = '/api/todo/items/:id/remove'
-            )
-            self.ids.remove(_id)
-
-    
-    @task
-    def create_items_route_title(self):
-        self.client.post(
-            url = '/api/todo/items',
-            headers = {
-                'Authorization': self.token,
-                'Content-Type': 'application/json'
-            },
-            data = json.dumps({"title": "New item"})
-        )
-
-
-    @task
-    def update_item_route_title(self):
-        if len(self.ids) > 0:
-            _id = self.ids[0]
-            self.client.put(
+            with self.client.put(
                 url = '/api/todo/items/' + _id + '/update',
                 headers = {
                     'Authorization': self.token,
                     'Content-Type': 'application/json'
                 },
                 data = json.dumps({"title": "Changed"}),
-                name = '/api/todo/items/:id/update',
-            )
-            
-    
-    @task
-    def create_items_route_no_title(self):
-        self.client.post(
-            url = '/api/todo/items',
-            headers = {
-                'Authorization': self.token,
-                'Content-Type': 'application/json'
-            },
-            data = json.dumps({"description": "New description"})
-        )
+                name = '/api/todo/items/:id/update - no description',
+                catch_response = True
+            ) as response:
+                if response.status_code == 400:
+                    response.success()
+                else:
+                    response.failure("Got status code " + str(response.status_code) + " instead of 400")
 
 
     @task
     def update_item_route_no_title(self):
         if len(self.ids) > 0:
             _id = self.ids[0]
-            self.client.put(
+            with self.client.put(
                 url = '/api/todo/items/' + _id + '/update',
                 headers = {
                     'Authorization': self.token,
                     'Content-Type': 'application/json'
                 },
                 data = json.dumps({"description": "New description"}),
-                name = '/api/todo/items/:id/update',
-            )
-
-
-    @task
-    def create_items_route_no_data(self):
-        self.client.post(
-            url = '/api/todo/items',
-            headers = {
-                'Authorization': self.token,
-                'Content-Type': 'application/json'
-            },
-            data = json.dumps({})
-        )
+                name = '/api/todo/items/:id/update - no title',
+                catch_response = True
+            ) as response:
+                if response.status_code == 400:
+                    response.success()
+                else:
+                    response.failure("Got status code " + str(response.status_code) + " instead of 400")
 
 
     @task
     def update_item_route_no_data(self):
         if len(self.ids) > 0:
             _id = self.ids[0]
-            self.client.put(
+            with self.client.put(
                 url = '/api/todo/items/' + _id + '/update',
                 headers = {
                     'Authorization': self.token,
                     'Content-Type': 'application/json'
                 },
                 data = json.dumps({}),
-                name = '/api/todo/items/:id/update',
-            )
+                name = '/api/todo/items/:id/update - no data',
+                catch_response = True
+            ) as response:
+                if response.status_code == 400:
+                    response.success()
+                else:
+                    response.failure("Got status code " + str(response.status_code) + " instead of 400")
