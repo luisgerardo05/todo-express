@@ -95,3 +95,123 @@ class WebsiteUser(HttpUser):
                 name = '/api/todo/items/:id/remove'
             )
             self.ids.remove(_id)
+
+    
+    @task
+    def create_items_route_bad_token(self):
+        self.client.post(
+            url = '/api/todo/items',
+            headers = {
+                'Authorization': 'self.token',
+                'Content-Type': 'application/json'
+            },
+            data = json.dumps(self.items[random.randint(0,8)])
+        )
+
+
+    @task
+    def update_item_route_bad_token(self):
+        if len(self.ids) > 0:
+            _id = self.ids[0]
+            self.client.put(
+                url = '/api/todo/items/' + _id + '/update',
+                headers = {
+                    'Authorization': 'self.token',
+                    'Content-Type': 'application/json'
+                },
+                data = json.dumps(self.items[random.randint(0,8)]),
+                name = '/api/todo/items/:id/update',
+            )
+
+
+    @task
+    def delete_item_route_bad_token(self):
+        if len(self.ids) > 0:
+            _id = self.ids[0]
+            self.client.delete(
+                url = '/api/todo/items/' + _id + '/remove',
+                headers = {'Authorization': 'self.token',},
+                name = '/api/todo/items/:id/remove'
+            )
+            self.ids.remove(_id)
+
+    
+    @task
+    def create_items_route_title(self):
+        self.client.post(
+            url = '/api/todo/items',
+            headers = {
+                'Authorization': self.token,
+                'Content-Type': 'application/json'
+            },
+            data = json.dumps({"title": "New item"})
+        )
+
+
+    @task
+    def update_item_route_title(self):
+        if len(self.ids) > 0:
+            _id = self.ids[0]
+            self.client.put(
+                url = '/api/todo/items/' + _id + '/update',
+                headers = {
+                    'Authorization': self.token,
+                    'Content-Type': 'application/json'
+                },
+                data = json.dumps({"title": "Changed"}),
+                name = '/api/todo/items/:id/update',
+            )
+            
+    
+    @task
+    def create_items_route_no_title(self):
+        self.client.post(
+            url = '/api/todo/items',
+            headers = {
+                'Authorization': self.token,
+                'Content-Type': 'application/json'
+            },
+            data = json.dumps({"description": "New description"})
+        )
+
+
+    @task
+    def update_item_route_no_title(self):
+        if len(self.ids) > 0:
+            _id = self.ids[0]
+            self.client.put(
+                url = '/api/todo/items/' + _id + '/update',
+                headers = {
+                    'Authorization': self.token,
+                    'Content-Type': 'application/json'
+                },
+                data = json.dumps({"description": "New description"}),
+                name = '/api/todo/items/:id/update',
+            )
+
+
+    @task
+    def create_items_route_no_data(self):
+        self.client.post(
+            url = '/api/todo/items',
+            headers = {
+                'Authorization': self.token,
+                'Content-Type': 'application/json'
+            },
+            data = json.dumps({})
+        )
+
+
+    @task
+    def update_item_route_no_data(self):
+        if len(self.ids) > 0:
+            _id = self.ids[0]
+            self.client.put(
+                url = '/api/todo/items/' + _id + '/update',
+                headers = {
+                    'Authorization': self.token,
+                    'Content-Type': 'application/json'
+                },
+                data = json.dumps({}),
+                name = '/api/todo/items/:id/update',
+            )
